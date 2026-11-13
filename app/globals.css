@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens — derivados do Kit de Marca Gamma Jr. Engenharia
+   Cores: exatamente os códigos da página "Paleta de cores" do kit.
+   Tipografia: Oswald (títulos) + Montserrat (texto). Lobster fora do site
+   por decisão de direção de arte (kit: "somente para títulos", máx. 2 estilos).
+   ========================================================================== */
+
+@theme {
+  /* Paleta oficial */
+  --color-turquesa: #1fddbd;
+  --color-petroleo: #1d7e8e;
+  --color-areia: #f1ead1;
+  --color-creme: #fffcf0;
+  --color-branco: #ffffff;
+  --color-grafite: #212121;
+  --color-preto: #000000;
+  --color-nevoa: #ebebeb;
+
+  /* Famílias (variáveis injetadas por next/font em app/layout.tsx) */
+  --font-display: var(--font-oswald), "Oswald", "Arial Narrow", sans-serif;
+  --font-sans: var(--font-montserrat), "Montserrat", system-ui, sans-serif;
+
+  /* Escala tipográfica fluida */
+  --text-display: clamp(3.1rem, 0.8rem + 7vw, 8rem);
+  --text-display--line-height: 0.9;
+  --text-title: clamp(2.25rem, 1.2rem + 3.6vw, 4.5rem);
+  --text-title--line-height: 0.95;
+  --text-lead: clamp(1rem, 0.92rem + 0.35vw, 1.25rem);
+  --text-lead--line-height: 1.55;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1;
+
+  /* Tracking inspirado no espaçamento da marca nominal */
+  --tracking-marca: 0.32em;
+  --tracking-label: 0.22em;
+
+  /* Movimento */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Layout */
+  --spacing-header: 4.5rem;
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: 90rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --header-h: 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-h: 4.5rem;
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--header-h);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-grafite);
+    color: var(--color-creme);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--color-turquesa);
+    color: var(--color-grafite);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-turquesa);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Evita o "flash" do conteúdo antes da animação de entrada.
+     Só se aplica quando o JS está ativo (classe .js no <html>). */
+  .js [data-reveal] {
+    visibility: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Indicador de rolagem da hero */
+@keyframes scroll-cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.animate-scroll-cue {
+  animation: scroll-cue 2.4s var(--ease-in-out-quart) infinite;
+}
