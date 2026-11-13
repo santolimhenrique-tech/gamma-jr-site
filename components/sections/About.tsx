@@ -10,11 +10,38 @@ const facts = [
   { term: "Fundação", value: "[PREENCHER]" },
 ] as const;
 
-const mvv = [
-  { term: "Missão", text: "[PREENCHER] Missão da Gamma Jr., em uma ou duas frases." },
-  { term: "Visão", text: "[PREENCHER] Visão da Gamma Jr., em uma ou duas frases." },
-  { term: "Valores", text: "[PREENCHER] Valores da Gamma Jr., em poucas palavras." },
-] as const;
+const mvv: { term: string; text?: string; list?: string[] }[] = [
+  {
+    term: "Missão",
+    text: "Transformar o Brasil através de projetos de impacto, formando líderes capazes e com responsabilidade social.",
+  },
+  {
+    term: "Visão",
+    text: "Impactar a vida dos pequenos e médios empreendedores, tornando a tecnologia mais acessível, além de proporcionar vivência empresarial ao time.",
+  },
+  { term: "Valores", list: ["Empatia", "Profissionalismo", "Sinergia", "Adaptabilidade"] },
+];
+
+const photos = {
+  main: {
+    src: "/equipe/equipe-comemorando.webp",
+    alt: "Membros da Gamma Jr. comemorando juntos, segurando a bandeira da empresa",
+    w: 1317,
+    h: 878,
+  },
+  side: {
+    src: "/equipe/equipe-palco-bandeira.jpg",
+    alt: "Equipe da Gamma Jr. no palco de um evento, com o rosto pintado de turquesa e a bandeira da empresa",
+    w: 1600,
+    h: 1066,
+  },
+  mej: {
+    src: "/equipe/mej-empresas-juniores.webp",
+    alt: "Gamma Jr. e outras empresas juniores reunidas no palco, cada uma com sua bandeira",
+    w: 1317,
+    h: 878,
+  },
+} as const;
 
 /**
  * 01 · Quem somos
@@ -76,6 +103,39 @@ export function About() {
               }),
           });
 
+          // Fotos: leve paralaxe da imagem dentro da moldura.
+          gsap.utils.toArray<HTMLElement>("[data-parallax]", el).forEach((img) => {
+            gsap.fromTo(
+              img,
+              { yPercent: -6 },
+              {
+                yPercent: 6,
+                ease: "none",
+                scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true },
+              },
+            );
+          });
+
+          // MEJ: a foto se expande até as bordas ao entrar; o texto sobe em seguida.
+          const mej = el.querySelector<HTMLElement>("[data-mej]")!;
+          gsap.fromTo(
+            "[data-mej-media]",
+            { clipPath: "inset(7% 5% 7% 5% round 2rem)" },
+            {
+              clipPath: "inset(0% 0% 0% 0% round 0rem)",
+              ease: "none",
+              scrollTrigger: { trigger: mej, start: "top bottom", end: "top 10%", scrub: true },
+            },
+          );
+          gsap.from("[data-mej-text] > *", {
+            opacity: 0,
+            y: 28,
+            duration: motion.base,
+            ease: motion.ease,
+            stagger: 0.09,
+            scrollTrigger: { trigger: mej, start: "top 35%", once: true },
+          });
+
           return () => split.revert();
         });
       });
@@ -100,7 +160,7 @@ export function About() {
       aria-labelledby="quem-somos-titulo"
       className="relative z-10 rounded-t-[1.75rem] bg-creme text-grafite shadow-[0_-40px_80px_-20px_rgba(0,0,0,0.45)] lg:rounded-t-[2.5rem]"
     >
-      <div className="container-site grid grid-cols-1 gap-y-12 pb-24 pt-20 lg:grid-cols-12 lg:gap-x-8 lg:pb-40 lg:pt-36">
+      <div className="container-site grid grid-cols-1 gap-y-12 pb-24 pt-20 lg:grid-cols-12 lg:gap-x-8 lg:pb-36 lg:pt-36">
         {/* Rótulo fixo na coluna lateral (desktop) */}
         <div className="lg:col-span-3">
           <div className="lg:sticky lg:top-[calc(var(--header-h)+2.5rem)]">
@@ -135,26 +195,121 @@ export function About() {
             ))}
           </dl>
 
-          {/* Missão, visão e valores */}
-          <div className="mt-24 lg:mt-36">
-            <h3 className="sr-only">
-              Missão, visão e valores
-            </h3>
-            <dl className="flex flex-col gap-12 lg:gap-16">
-              {mvv.map((item) => (
-                <div
-                  key={item.term}
-                  data-about-item
-                  className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-baseline md:gap-10"
-                >
-                  <dt className="font-display text-title font-medium uppercase text-petroleo">
-                    {item.term}
-                  </dt>
-                  <dd className="max-w-[42ch] text-lead text-grafite/75">{item.text}</dd>
-                </div>
-              ))}
-            </dl>
+          {/* Equipe: composição editorial, foto principal + foto lateral deslocada */}
+          <div className="mt-20 grid grid-cols-12 gap-x-4 lg:mt-28 lg:gap-x-8">
+            <figure
+              data-about-item
+              className="relative col-span-12 aspect-[3/2] overflow-hidden rounded-[1rem] md:col-span-8 md:col-start-1 md:row-start-1"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                data-parallax
+                src={photos.main.src}
+                alt={photos.main.alt}
+                width={photos.main.w}
+                height={photos.main.h}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-x-0 -top-[8%] h-[116%] w-full object-cover"
+              />
+            </figure>
+            <figure
+              data-about-item
+              className="relative z-10 col-span-9 col-start-4 -mt-10 aspect-[3/2] overflow-hidden rounded-[1rem] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.4)] md:col-span-5 md:col-start-8 md:row-start-1 md:mt-[30%] md:self-start"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                data-parallax
+                src={photos.side.src}
+                alt={photos.side.alt}
+                width={photos.side.w}
+                height={photos.side.h}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-x-0 -top-[8%] h-[116%] w-full object-cover"
+              />
+            </figure>
           </div>
+        </div>
+      </div>
+
+      {/* Movimento Empresa Júnior — foto em tela cheia */}
+      <div
+        data-mej
+        data-tone="dark"
+        aria-labelledby="mej-titulo"
+        role="region"
+        className="relative min-h-[88svh] overflow-hidden lg:min-h-[100svh]"
+      >
+        <div data-mej-media className="absolute inset-0 bg-grafite">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photos.mej.src}
+            alt={photos.mej.alt}
+            width={photos.mej.w}
+            height={photos.mej.h}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-[50%_45%]"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-preto/90 via-preto/45 to-preto/10"
+          />
+        </div>
+
+        <div className="container-site relative flex min-h-[88svh] items-end pb-14 lg:min-h-[100svh] lg:pb-20">
+          <div data-mej-text className="max-w-2xl text-creme">
+            <p className="flex items-center gap-3 font-display text-[0.8125rem] uppercase tracking-[var(--tracking-marca)]">
+              <span aria-hidden className="block h-px w-8 bg-turquesa" />
+              Movimento Empresa Júnior
+            </p>
+            <h3
+              id="mej-titulo"
+              className="mt-6 font-display text-title font-medium uppercase"
+            >
+              Parte de uma <span className="text-turquesa">rede nacional.</span>
+            </h3>
+            <p className="mt-6 max-w-[46ch] text-lead text-creme/80">
+              A Gamma Jr. integra o Movimento Empresa Júnior, que reúne empresas juniores de
+              universidades de todo o país. Nos encontros do movimento, trocamos experiência com
+              outras EJs e trazemos esse aprendizado para cada projeto.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Missão, visão e valores */}
+      <div className="container-site grid grid-cols-1 pb-24 pt-24 lg:grid-cols-12 lg:gap-x-8 lg:pb-40 lg:pt-36">
+        <div className="lg:col-span-9 lg:col-start-4">
+          <h3 className="sr-only">Missão, visão e valores</h3>
+          <dl className="flex flex-col gap-12 lg:gap-16">
+            {mvv.map((item) => (
+              <div
+                key={item.term}
+                data-about-item
+                className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-baseline md:gap-10"
+              >
+                <dt className="font-display text-title font-medium uppercase text-petroleo">
+                  {item.term}
+                </dt>
+                {item.list ? (
+                  <dd>
+                    <ul className="flex flex-wrap gap-x-6 gap-y-2 font-display text-[clamp(1.25rem,1rem+0.9vw,1.75rem)] uppercase tracking-[0.06em]">
+                      {item.list.map((v) => (
+                        <li key={v} className="flex items-center gap-3">
+                          <span aria-hidden className="size-1.5 rounded-full bg-turquesa" />
+                          {v}
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
+                ) : (
+                  <dd className="max-w-[44ch] text-lead text-grafite/75">{item.text}</dd>
+                )}
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
     </section>
