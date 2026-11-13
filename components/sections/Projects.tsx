@@ -53,23 +53,73 @@ export function Projects() {
         const xTo = gsap.quickTo(box, "x", { duration: dur, ease: "power3.out" });
         const yTo = gsap.quickTo(box, "y", { duration: dur, ease: "power3.out" });
 
-        const move = (e: PointerEvent) => {
+        // Fonte única de verdade: a posição do cursor comparada à área da lista.
+        // Ao rolar (roda/trackpad/teclado) o cursor fica parado e a lista passa
+        // por baixo dele sem disparar pointerleave — por isso também checamos
+        // no scroll, senão a prévia fica "presa" sobre outras seções.
+        const pointer = { x: -1, y: -1, known: false };
+        let shown = false;
+        let raf = 0;
+
+        const show = () => {
+          if (shown) return;
+          shown = true;
+          gsap.set(box, { x: pointer.x, y: pointer.y });
+          gsap.to(box, { autoAlpha: 1, scale: 1, duration: reduce ? 0.15 : 0.5, ease: "expo.out", overwrite: "auto" });
+        };
+        const hide = (instant = false) => {
+          if (!shown) return;
+          shown = false;
+          gsap.to(box, {
+            autoAlpha: 0,
+            scale: 0.85,
+            duration: instant ? 0.12 : 0.3,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        };
+
+        const sync = (fromScroll: boolean) => {
+          raf = 0;
+          if (!pointer.known) return;
+          const r = list.getBoundingClientRect();
+          const inside =
+            pointer.x >= r.left && pointer.x <= r.right && pointer.y >= r.top && pointer.y <= r.bottom;
+          if (!inside) return hide(fromScroll);
+          // Linha sob o cursor (o pointerenter das linhas também não dispara no scroll).
+          const rows = list.querySelectorAll<HTMLElement>("[data-project-row]");
+          rows.forEach((row, i) => {
+            const rr = row.getBoundingClientRect();
+            if (pointer.y >= rr.top && pointer.y <= rr.bottom) setActive(i);
+          });
+          show();
+        };
+
+        const onMove = (e: PointerEvent) => {
+          pointer.x = e.clientX;
+          pointer.y = e.clientY;
+          pointer.known = true;
           xTo(e.clientX);
           yTo(e.clientY);
+          sync(false);
         };
-        const enter = (e: PointerEvent) => {
-          gsap.set(box, { x: e.clientX, y: e.clientY });
-          gsap.to(box, { autoAlpha: 1, scale: 1, duration: reduce ? 0.15 : 0.5, ease: "expo.out" });
+        const onScroll = () => {
+          if (!raf) raf = requestAnimationFrame(() => sync(true));
         };
-        const leave = () => gsap.to(box, { autoAlpha: 0, scale: 0.85, duration: 0.3, ease: "power2.out" });
+        const onLeaveWindow = () => {
+          pointer.known = false;
+          hide(true);
+        };
 
-        list.addEventListener("pointermove", move);
-        list.addEventListener("pointerenter", enter);
-        list.addEventListener("pointerleave", leave);
+        window.addEventListener("pointermove", onMove, { passive: true });
+        window.addEventListener("scroll", onScroll, { passive: true });
+        document.documentElement.addEventListener("pointerleave", onLeaveWindow);
         return () => {
-          list.removeEventListener("pointermove", move);
-          list.removeEventListener("pointerenter", enter);
-          list.removeEventListener("pointerleave", leave);
+          cancelAnimationFrame(raf);
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("scroll", onScroll);
+          document.documentElement.removeEventListener("pointerleave", onLeaveWindow);
+          gsap.set(box, { autoAlpha: 0 });
         };
       });
 
