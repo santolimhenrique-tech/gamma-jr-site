@@ -24,12 +24,6 @@ const items = [
     text: "Marcas consistentes, do logotipo às aplicações, com regras claras de uso.",
     scope: ["Logotipo", "Paleta e tipografia", "Manual de marca"],
   },
-  {
-    index: "04",
-    title: "Capacitações",
-    text: "Treinamentos práticos em ferramentas digitais para equipes e estudantes.",
-    scope: ["Conteúdo sob medida", "Prática guiada", "Material de apoio"],
-  },
 ] as const;
 
 /**
@@ -99,7 +93,7 @@ export function Services() {
             Serviços
           </SectionLabel>
           <p className="mt-8 font-display text-title font-medium uppercase">
-            Quatro frentes, <span className="text-turquesa">um mesmo método.</span>
+            Três frentes, <span className="text-turquesa">um mesmo método.</span>
           </p>
         </div>
 
@@ -167,7 +161,7 @@ export function Services() {
                   aria-hidden
                   className="absolute bottom-5 right-6 font-display text-xs tracking-[0.18em] text-creme/40"
                 >
-                  {items[active].index} / 04
+                  {items[active].index} / {String(items.length).padStart(2, "0")}
                 </p>
               </div>
             </div>

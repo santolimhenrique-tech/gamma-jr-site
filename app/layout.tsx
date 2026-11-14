@@ -32,7 +32,6 @@ export const metadata: Metadata = {
     "sites institucionais",
     "Power BI",
     "identidade visual",
-    "capacitações",
   ],
   alternates: { canonical: "/" },
   openGraph: {

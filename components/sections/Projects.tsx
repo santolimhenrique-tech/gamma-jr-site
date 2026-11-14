@@ -23,15 +23,15 @@ export function Projects() {
       const mm = gsap.matchMedia();
 
       mm.add(FULL, () => {
-        gsap.fromTo(
-          "[data-projects-word]",
-          { xPercent: 4 },
-          {
-            xPercent: -22,
-            ease: "none",
-            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
-          },
-        );
+        // O título cabe inteiro na tela o tempo todo (sem deslizar para fora):
+        // sobe por uma máscara ao entrar na viewport.
+        gsap.from("[data-projects-word] > span", {
+          yPercent: 110,
+          duration: 1.4,
+          ease: "expo.out",
+          stagger: 0.12,
+          scrollTrigger: { trigger: "[data-projects-word]", start: "top 85%", once: true },
+        });
         gsap.from("[data-project-row]", {
           opacity: 0,
           y: 40,
@@ -142,17 +142,24 @@ export function Projects() {
         </SectionLabel>
       </div>
 
-      <p
-        data-projects-word
-        aria-hidden
-        className="mt-10 whitespace-nowrap pl-[4vw] font-display text-[clamp(5rem,19vw,20rem)] font-medium uppercase leading-[0.85] text-creme lg:mt-14"
-      >
-        Projetos <span className="text-turquesa">selecionados</span>
-      </p>
+      <div className="container-site">
+        <p
+          data-projects-word
+          aria-hidden
+          className="mt-10 flex flex-nowrap gap-[0.25em] whitespace-nowrap font-display text-[clamp(2.75rem,12vw,15rem)] font-medium uppercase leading-[1] text-creme lg:mt-14"
+        >
+          <span className="block overflow-hidden pb-[0.06em]">
+            <span className="block">Nossos</span>
+          </span>
+          <span className="block overflow-hidden pb-[0.06em]">
+            <span className="block text-turquesa">projetos</span>
+          </span>
+        </p>
+      </div>
 
-      <div className="container-site mt-14 lg:mt-20">
-        <p className="max-w-[38ch] text-lead text-areia/70">
-          Uma seleção de trabalhos entregues pela Gamma&nbsp;Jr.
+      <div className="container-site mt-12 lg:mt-16">
+        <p className="max-w-[40ch] text-lead text-areia/70">
+          Sites institucionais desenvolvidos pela Gamma&nbsp;Jr.
         </p>
 
         <ol data-projects-list className="mt-12 lg:mt-16">
@@ -220,7 +227,7 @@ function ProjectRow({
         <p className="col-start-2 text-[0.9375rem] text-areia/70 lg:col-span-3 lg:col-start-auto">
           {project.client}
           <span className="block text-[0.75rem] uppercase tracking-[var(--tracking-label)] text-creme/45">
-            {project.category}
+            {project.type}
           </span>
         </p>
         <p className="col-start-2 font-display text-sm tracking-[0.14em] text-creme/50 lg:col-span-2 lg:col-start-auto lg:text-right">

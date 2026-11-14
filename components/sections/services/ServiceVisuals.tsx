@@ -248,43 +248,4 @@ export function IdentityVisual() {
   );
 }
 
-export function TrainingVisual() {
-  const nodes = [
-    { x: 80, y: 250 },
-    { x: 190, y: 190 },
-    { x: 300, y: 220 },
-    { x: 400, y: 130 },
-  ];
-  const path = `M${nodes.map((n) => `${n.x} ${n.y}`).join(" L")}`;
-  return (
-    <svg {...svgProps}>
-      {/* Tela de aula */}
-      <g {...rise(0)}>
-        <rect x="40" y="36" width="250" height="110" rx="10" fill={`rgb(${C} / 0.05)`} />
-        <rect x="58" y="56" width="120" height="12" rx="3" fill={`rgb(${C} / 0.85)`} />
-        <rect x="58" y="80" width="190" height="5" rx="2.5" fill={`rgb(${C} / 0.25)`} />
-        <rect x="58" y="92" width="160" height="5" rx="2.5" fill={`rgb(${C} / 0.25)`} />
-        <rect x="58" y="114" width="60" height="16" rx="4" fill={`rgb(${P})`} />
-      </g>
-      <g {...rise(120)}>
-        <rect x="306" y="36" width="134" height="60" rx="10" fill={`rgb(${C} / 0.05)`} />
-        <rect x="322" y="56" width="70" height="5" rx="2.5" fill={`rgb(${C} / 0.3)`} />
-        <rect x="322" y="72" width="102" height="6" rx="3" fill={`rgb(${C} / 0.08)`} />
-        <rect x="322" y="72" width="102" height="6" rx="3" fill={`rgb(${T})`} {...grow(500, "x", "left")} />
-      </g>
-
-      {/* Trilha de módulos */}
-      <path d={path} stroke={`rgb(${C} / 0.1)`} strokeWidth="2" />
-      <path d={path} stroke={`rgb(${T})`} strokeWidth="2" strokeLinejoin="round" {...draw(300, 1800)} />
-      {nodes.map((n, i) => (
-        <g key={i} {...rise(400 + i * 320)}>
-          <circle cx={n.x} cy={n.y} r="16" fill="#212121" stroke={`rgb(${T})`} strokeWidth="2" />
-          <circle cx={n.x} cy={n.y} r="6" fill={i === nodes.length - 1 ? `rgb(${T})` : `rgb(${C} / 0.8)`} />
-          <rect x={n.x - 22} y={n.y + 28} width="44" height="5" rx="2.5" fill={`rgb(${C} / 0.3)`} />
-        </g>
-      ))}
-    </svg>
-  );
-}
-
-export const serviceVisuals = [SiteVisual, DashboardVisual, IdentityVisual, TrainingVisual];
+export const serviceVisuals = [SiteVisual, DashboardVisual, IdentityVisual];

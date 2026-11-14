@@ -7,7 +7,7 @@ export const site = {
   name: "Gamma Jr. Engenharia",
   shortName: "Gamma Jr.",
   description:
-    "Empresa júnior da EEL-USP que desenvolve sites institucionais, dashboards em Power BI, identidade visual e capacitações tecnológicas.",
+    "Empresa júnior da EEL-USP que desenvolve sites institucionais, dashboards em Power BI e identidade visual.",
   // [PREENCHER] domínio definitivo. Pode ser definido via NEXT_PUBLIC_SITE_URL.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   locale: "pt_BR",
@@ -25,7 +25,6 @@ export const services = [
   { index: "01", label: "Sites institucionais" },
   { index: "02", label: "Dashboards Power BI" },
   { index: "03", label: "Identidade visual" },
-  { index: "04", label: "Capacitações" },
 ] as const;
 
 export const contact = {

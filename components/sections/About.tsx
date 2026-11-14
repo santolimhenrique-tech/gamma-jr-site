@@ -7,7 +7,6 @@ import { gsap, ScrollTrigger, SplitText, useGSAP, FULL, motion } from "@/lib/gsa
 const facts = [
   { term: "Instituição", value: "Escola de Engenharia de Lorena · USP" },
   { term: "Sede", value: "Lorena, SP" },
-  { term: "Fundação", value: "[PREENCHER]" },
 ] as const;
 
 const mvv: { term: string; text?: string; list?: string[] }[] = [
@@ -179,12 +178,12 @@ export function About() {
           >
             A Gamma Jr. é a empresa júnior da{" "}
             <span className="text-petroleo">Escola de Engenharia de Lorena</span>. Estudantes de
-            engenharia transformando conhecimento técnico em sites, dashboards, marcas e
-            capacitações para clientes reais.
+            engenharia transformando conhecimento técnico em sites, dashboards e identidade
+            visual para clientes reais.
           </p>
 
           {/* Fatos */}
-          <dl className="mt-16 grid grid-cols-1 gap-y-8 sm:grid-cols-3 sm:gap-x-8 lg:mt-24">
+          <dl className="mt-16 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-8 lg:mt-24">
             {facts.map((f) => (
               <div key={f.term} data-about-item>
                 <dt className="text-label uppercase tracking-[var(--tracking-label)] text-petroleo">
